@@ -17,4 +17,10 @@ const server = http.createServer(app);
 // web socket server
 const wss = new WebSocketServer({ server });
 
+// the socket of server.js represents connected browser
+function handleConnection(socket) {
+    console.log(socket);
+}
+wss.on('connection', handleConnection);
+
 server.listen(3000, handleListen);
