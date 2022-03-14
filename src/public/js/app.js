@@ -14,5 +14,5 @@ socket.addEventListener('close', () => {
 });
 
 setTimeout(() => {
-    socket.send('hello from the browser!');
+    socket.send('hello from the browser!'); // send sth to BE from FE
 }, 10000);
