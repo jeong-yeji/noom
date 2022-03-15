@@ -16,7 +16,13 @@ const httpServer = http.createServer(app);
 const wsServer = SocketIO(httpServer);
 
 wsServer.on('connection', (socket) => {
-    console.log(socket);
+    // get room name >> 10 secs later >> call done() from BE & execute done() on FE
+    socket.on('enter_room', (msg, done) => {
+        console.log(msg);
+        setTimeout(() => {
+            done();
+        }, 10000);
+    });
 });
 
 /*
