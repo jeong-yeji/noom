@@ -17,15 +17,17 @@ const server = http.createServer(app);
 // web socket server
 const wss = new WebSocketServer({ server });
 
+const sockets = [];
+
 // the socket of server.js represents connected browser
 // use annoymous function
 wss.on('connection', (socket) => {
+    sockets.push(socket);
     console.log('Connected to Browser ✔');
     socket.on('close', () => console.log('Disconnected from the Browser ❌'));
     socket.on('message', (message) => {
-        console.log(message.toString('utf-8'));
+        sockets.forEach((aSocket) => aSocket.send(message.toString('utf-8')));
     });
-    socket.send('hello!'); // send sth to FE from BE
 });
 
 server.listen(3000, handleListen);
