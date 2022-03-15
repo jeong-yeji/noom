@@ -1,5 +1,5 @@
 import http from 'http';
-import { WebSocketServer } from 'ws';
+import SocketIO from 'socket.io';
 import express from 'express';
 
 const app = express();
@@ -10,10 +10,16 @@ app.use('/public', express.static(__dirname + '/public')); // create public url
 app.get('/', (_, res) => res.render('home')); // route handler
 app.get('/*', (_, res) => res.redirect('/')); // catchall url
 
-const handleListen = () => console.log('Listening on http://localhost:3000');
-
 // http server
-const server = http.createServer(app);
+const httpServer = http.createServer(app);
+// IO(Web Socket) Server
+const wsServer = SocketIO(httpServer);
+
+wsServer.on('connection', (socket) => {
+    console.log(socket);
+});
+
+/*
 // web socket server
 const wss = new WebSocketServer({ server });
 
@@ -31,10 +37,12 @@ wss.on('connection', (socket) => {
         switch (message.type) {
             case 'new_message':
                 sockets.forEach((aSocket) => aSocket.send(`${socket.nickname}: ${message.payload}`));
-            case 'nickname':
-                socket['nickname'] = message.payload;
-        }
+                case 'nickname':
+                    socket['nickname'] = message.payload;
+                }
     });
 });
+*/
 
-server.listen(3000, handleListen);
+const handleListen = () => console.log('Listening on http://localhost:3000');
+httpServer.listen(3000, handleListen);
