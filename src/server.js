@@ -17,11 +17,11 @@ const wsServer = SocketIO(httpServer);
 
 wsServer.on('connection', (socket) => {
     // get room name >> 10 secs later >> call done() from BE & execute done() on FE
-    socket.on('enter_room', (msg, done) => {
-        console.log(msg);
+    socket.on('enter_room', (roomName, done) => {
+        console.log(roomName);
         setTimeout(() => {
-            done();
-        }, 10000);
+            done('hello from the backend');
+        }, 15000);
     });
 });
 
