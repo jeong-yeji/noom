@@ -25,6 +25,7 @@ wsServer.on('connection', (socket) => {
         // In Socket.io, all sockets(users) have a private room between them and server.
         socket.join(roomName);
         done();
+        socket.to(roomName).emit('welcome');
     });
 });
 
