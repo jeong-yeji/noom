@@ -23,7 +23,8 @@ wsServer.on('connection', (socket) => {
     });
 
     // get room name >> 10 secs later >> call done() from BE & execute done() on FE
-    socket.on('enter_room', (roomName, done) => {
+    socket.on('enter_room', (roomName, nickname, done) => {
+        socket['nickname'] = nickname;
         // In Socket.io, all sockets(users) have a private room between them and server.
         socket.join(roomName);
         done();

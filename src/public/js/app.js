@@ -44,13 +44,19 @@ function showRoom() {
 
 function handleRoomSubmit(event) {
     event.preventDefault();
-    const input = form.querySelector('input');
+
+    // const input = form.querySelector('input');
+    const room_name = form.querySelector('#roomName');
+    const name = form.querySelector('#name');
+
     // arg1 : event name - it can be anything. we can send any event that we make. => can custom event name
     // argsN : payload - we can send ANYTHING(json, string, boolean, number...). do not need to change object to string. we can send AS MANY AS we want.
     // last args : func that we can call from SERVER - call at BE, but func is on FE
-    socket.emit('enter_room', input.value, showRoom); // := socket.send()
-    roomName = input.value;
-    input.value = '';
+    socket.emit('enter_room', room_name.value, name.value, showRoom); // := socket.send()
+    roomName = room_name.value;
+    room_name.value = '';
+
+    room.querySelector('#name input').value = name.value;
 }
 form.addEventListener('submit', handleRoomSubmit);
 
