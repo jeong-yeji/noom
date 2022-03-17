@@ -36,6 +36,7 @@ function publicRooms() {
 
 wsServer.on('connection', (socket) => {
     socket['nickname'] = 'Annoymous';
+    wsServer.sockets.emit('room_change', publicRooms());
 
     socket.onAny((event) => {
         console.log(`Socket Event: ${event}`);
@@ -48,6 +49,7 @@ wsServer.on('connection', (socket) => {
         socket.join(roomName);
         done();
         socket.to(roomName).emit('welcome', socket.nickname);
+        wsServer.sockets.emit('room_change', publicRooms());
     });
 
     // disconnecting : the client is going to be disconnected, but hasn't left yet
@@ -55,6 +57,10 @@ wsServer.on('connection', (socket) => {
         socket.rooms.forEach((room) => {
             socket.to(room).emit('bye', socket.nickname);
         });
+    });
+
+    socket.on('disconnect', () => {
+        wsServer.sockets.emit('room_change', publicRooms());
     });
 
     socket.on('new_message', (msg, room, done) => {
