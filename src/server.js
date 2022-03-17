@@ -15,6 +15,25 @@ const httpServer = http.createServer(app);
 // IO(Web Socket) Server
 const wsServer = SocketIO(httpServer);
 
+function publicRooms() {
+    const {
+        sockets: {
+            adapter: { sids, rooms },
+        },
+    } = wsServer; // same as following codes
+    // const sids = wsServer.sockets.adapters.sids;
+    // const rooms = wsServer.sockets.adapters.rooms;
+
+    const publicRooms = [];
+    rooms.forEach((_, key) => {
+        if (sids.get(key) === undefined) {
+            publicRooms.push(key);
+        }
+    });
+
+    return publicRooms;
+}
+
 wsServer.on('connection', (socket) => {
     socket['nickname'] = 'Annoymous';
 
