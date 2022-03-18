@@ -34,6 +34,10 @@ function publicRooms() {
     return publicRooms;
 }
 
+function countRoom(roomName) {
+    return wsServer.sockets.adapter.rooms.get(roomName)?.size;
+}
+
 wsServer.on('connection', (socket) => {
     socket['nickname'] = 'Annoymous';
     wsServer.sockets.emit('room_change', publicRooms());
@@ -48,14 +52,14 @@ wsServer.on('connection', (socket) => {
         // In Socket.io, all sockets(users) have a private room between them and server.
         socket.join(roomName);
         done();
-        socket.to(roomName).emit('welcome', socket.nickname);
+        socket.to(roomName).emit('welcome', socket.nickname, countRoom(roomName));
         wsServer.sockets.emit('room_change', publicRooms());
     });
 
     // disconnecting : the client is going to be disconnected, but hasn't left yet
     socket.on('disconnecting', () => {
         socket.rooms.forEach((room) => {
-            socket.to(room).emit('bye', socket.nickname);
+            socket.to(room).emit('bye', socket.nickname, countRoom(room) - 1);
         });
     });
 
