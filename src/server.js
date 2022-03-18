@@ -51,8 +51,9 @@ wsServer.on('connection', (socket) => {
         socket['nickname'] = nickname;
         // In Socket.io, all sockets(users) have a private room between them and server.
         socket.join(roomName);
-        done();
-        socket.to(roomName).emit('welcome', socket.nickname, countRoom(roomName));
+        const cnt = countRoom(roomName);
+        done(cnt);
+        socket.to(roomName).emit('welcome', socket.nickname, cnt);
         wsServer.sockets.emit('room_change', publicRooms());
     });
 

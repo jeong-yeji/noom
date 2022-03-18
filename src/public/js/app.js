@@ -36,11 +36,10 @@ function refreshTitle(newCount) {
     h3.innerText = `Room ${roomName} (${newCount})`;
 }
 
-function showRoom() {
+function showRoom(roomCount) {
     welcome.hidden = true;
     room.hidden = false;
-    const h3 = room.querySelector('h3');
-    h3.innerText = `Room ${roomName}`;
+    refreshTitle(roomCount);
     const msgForm = room.querySelector('#msg');
     const nameForm = room.querySelector('#name');
     msgForm.addEventListener('submit', handleMessageSubmit);
