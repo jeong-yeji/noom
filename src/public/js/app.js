@@ -116,19 +116,38 @@ socket.on('welcome', async () => {
 });
 // Peer B
 socket.on('offer', async (offer) => {
+    console.log('received the offer');
     myPeerConnection.setRemoteDescription(offer);
     const answer = await myPeerConnection.createAnswer();
     myPeerConnection.setLocalDescription(answer);
     socket.emit('answer', answer, roomName);
+    console.log('sent the answer');
 });
 // Peer A
 socket.on('answer', (answer) => {
+    console.log('received the answer');
     myPeerConnection.setRemoteDescription(answer);
 });
 // => WebRTC는 통신을 위해 서버를 필요로 하지 않지만, offer를 주고 받기 위해 server 필요
+socket.on('ice', (ice) => {
+    console.log('received candidate');
+    myPeerConnection.addIceCandidate(ice);
+});
 
 // RTC Code
 function makeConnection() {
     myPeerConnection = new RTCPeerConnection();
+    myPeerConnection.addEventListener('icecandidate', handleIce);
+    myPeerConnection.addEventListener('addstream', handleAddStream);
     myStream.getTracks().forEach((track) => myPeerConnection.addTrack(track, myStream));
+}
+
+function handleIce(data) {
+    console.log('sent candidate');
+    socket.emit('ice', data.candidate, roomName);
+}
+
+function handleAddStream(data) {
+    const peerFace = document.getElementById('peerFace');
+    peerFace.srcObject = data.stream;
 }
